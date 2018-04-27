@@ -45,7 +45,6 @@ public class ScreeningScheduleEntity implements Serializable {
     private List<TicketEntity> tickets;
     
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false) //must have have a movie!
     private MovieEntity movie;
    
     public ScreeningScheduleEntity() {

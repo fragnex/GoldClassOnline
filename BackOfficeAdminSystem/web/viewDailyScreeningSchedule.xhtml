@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./template/defaultTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        
+        <h3>Back Office Admin System :: View Daily Screening Schedule</h3>
+        <br/>
+        
+        <h:form>
+            
+            <p:menubar>
+                
+                <p:submenu label="Create New Screening Schedule/Movie Schedule" icon="ui-icon-video">
+                    <p:menuitem value="Create New Screening Schedule/Movie Schedule" onclick="PF('dialogCreateNewScreeningSchedule').show()" icon="ui-icon-plusthick" />
+                    
+                    
+                </p:submenu>
+                
+            </p:menubar>
+            <br/>
+            
+        </h:form>
+        
+        <h:form id="formAllScreeningSchedules">
+            
+            <p:messages id="messages" redisplay="false" closable="true" />
+            
+            <p:dataTable id="dataTableAllScreeningSchedules" widgetVar="dataTableAllScreeningSchedules" value="#{calendarDayManagementManagedBean.screeningSchedulesOfselectedCalendarDayEntityToBeViewed}" var="screeningScheduleEntity" rowKey="#{screeningScheduleEntity.screeningScheduleId}" rowIndexVar="row"
+                         filteredValue="#{screeningScheduleManagedBean.filteredScreeningSchedules}"
+                         rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+                
+                <f:facet name="header">
+                    <p:outputPanel style="text-align: right;">
+                        <h:outputText value="Search all fields:" />
+                        <p:inputText id="globalFilter" onkeyup="PF('dataTableAllScreeningSchedules').filter()" style="width:300px" placeholder="Enter keyword"/>
+                    </p:outputPanel>
+                </f:facet>
+                
+                <p:column headerText="Screening Schedule ID" sortBy="#{screeningScheduleEntity.screeningScheduleId}" filterBy="#{screeningScheduleEntity.screeningScheduleId}" filterMatchMode="contains">
+                    <h:outputText value="#{screeningScheduleEntity.screeningScheduleId}" />
+                </p:column>
+                
+                <p:column headerText="Movie" sortBy="#{screeningScheduleEntity.movie.title}" filterBy="#{screeningScheduleEntity.movie.title}" filterMatchMode="contains">
+                    <h:outputText value="#{screeningScheduleEntity.movie.title}" />
+                </p:column>
+                
+                <p:column headerText="Start Time" sortBy="#{screeningScheduleEntity.startTime}" filterBy="#{screeningScheduleEntity.startTime}" filterMatchMode="contains">
+                    <h:outputText value="#{screeningScheduleEntity.startTime}" />
+                </p:column>
+                
+                <p:column headerText="End Time" sortBy="#{screeningScheduleEntity.endTime}" filterBy="#{screeningScheduleEntity.endTime}" filterMatchMode="contains">
+                    <h:outputText value="#{screeningScheduleEntity.endTime}" />
+                </p:column>
+                
+                <p:column headerText="Action" >
+                     <p:commandButton update="formUpdateScreeningSchedule" oncomplete="PF('dialogUpdateScreeningSchedule').show()" icon="ui-icon-pencil" title="Update Screening Schedule">
+                         <f:setPropertyActionListener value="#{screeningScheduleEntity}" target="#{calendarDayManagementManagedBean.screeningScheduleToBeUpdated}" />
+                    </p:commandButton>
+                    <p:commandButton icon="ui-icon-trash" actionListener="#{calendarDayManagementManagedBean.deleteScreeningSchedule}" update="formAllScreeningSchedules:dataTableAllScreeningSchedules formAllScreeningSchedules:messages">
+                        <f:attribute name="screeningScheduleEntityToDelete" value="#{screeningScheduleEntity}" />
+                        <p:confirm header="Confirmation" message="Are you sure you want to delete #{screeningScheduleEntity.screeningScheduleId} ?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                </p:column>
+                
+            </p:dataTable>
+            
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+            
+        </h:form>
+        
+        <h:form id="formCreateNewScreeningSchedule">
+            
+            <p:dialog id="dialogCreateNewScreeningSchedule" widgetVar="dialogCreateNewScreeningSchedule" header="Create New Screening Schedule" closable="true">
+
+                <p:messages id="messagesCreateScreeningSchedule" redisplay="false" />
+                
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="movie" value="Movie " />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="movie" value="#{calendarDayManagementManagedBean.movieTitle}" style="width:150px">
+                                <f:selectItem itemLabel="Select Movie" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{calendarDayManagementManagedBean.movieTitles}" />
+                            </p:selectOneMenu>
+                            
+                        </p:column>
+                        <p:column>
+                            <p:message for="movie"  />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="startTime" value="StartTime " />
+                        </p:column>
+                        <p:column>
+                            <p:calendar id="startTime" value="#{calendarDayManagementManagedBean.newScreeningScheduleEntityToBeCreated.startTime}" pattern="HH:mm" timeOnly="true"  />
+                        </p:column>
+                        <p:column>
+                            <p:message for="startTime"  />
+                        </p:column>
+                    </p:row>
+                    
+                    
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton type="reset" value="Clear" />&nbsp;
+                            <p:commandButton value="Create New Calendar Day" update="@form formAllScreeningSchedules:dataTableAllScreeningSchedules" actionListener="#{calendarDayManagementManagedBean.createNewScreeningSchedule}" oncomplete="PF('dialogCreateNewScreeningSchedule').show();" />
+                        </p:column>
+                    </p:row>
+                    
+                </p:panelGrid>
+
+            </p:dialog>
+            
+        </h:form>
+        
+        <h:form id="formUpdateScreeningSchedule">
+            
+            <p:dialog id="dialogUpdateScreeningSchedule" widgetVar="dialogUpdateScreeningSchedule" header="Update Screening Schedule" closable="true">
+
+                <p:messages id="messagesUpdateScreeningSchedule" redisplay="false" />
+                
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Screening Schedule ID: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{calendarDayManagementManagedBean.screeningScheduleToBeUpdated.screeningScheduleId}" />
+                        </p:column>
+                        <p:column>
+                            &nbsp;
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="movie" value="Movie " />
+                        </p:column>
+                        <p:column>
+                             <p:selectOneMenu id="movie" value="#{calendarDayManagementManagedBean.movieTitle}" style="width:150px">
+                                <f:selectItem itemLabel="Select Movie" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{calendarDayManagementManagedBean.movieTitles}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column>
+                            <p:message for="movie" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="startTime" value="StartTime " />
+                        </p:column>
+                        <p:column>
+                            <p:calendar id="startTime" value="#{calendarDayManagementManagedBean.screeningScheduleToBeUpdated.startTime}" pattern="HH:mm" timeOnly="true"  />
+                        </p:column>
+                        <p:column>
+                            <p:message for="startTime" />
+                        </p:column>
+                    </p:row>
+                  
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton value="Update Screening Schedule" update="@form formAllScreeningSchedules:dataTableAllScreeningSchedules" actionListener="#{calendarDayManagementManagedBean.updateScreeningSchedule}" oncomplete="PF('dialogUpdateScreeningSchedule').show();" />
+                        </p:column>
+                    </p:row>
+                    
+                </p:panelGrid>
+
+            </p:dialog>
+            
+        </h:form>
+        
+    </ui:define>
+</ui:composition>

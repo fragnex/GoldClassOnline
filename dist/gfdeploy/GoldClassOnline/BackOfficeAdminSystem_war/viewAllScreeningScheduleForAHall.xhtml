@@ -17,6 +17,8 @@
                 
                 <p:submenu label="Create Calendar Day" icon="ui-icon-calendar">
                     <p:menuitem value="Create New Calendar Day" onclick="PF('dialogCreateNewCalendarDay').show()" icon="ui-icon-plusthick" />
+                    
+                    
                 </p:submenu>
                 
             </p:menubar>
@@ -28,53 +30,60 @@
             
             <p:messages id="messages" redisplay="false" closable="true" />
             
-            <p:dataTable id="dataTableAllScreeningSchedules" widgetVar="dataTableAllScreeningSchedules" value="#{hallManagementManagedBean.selectedHallToViewForOperationStaff.calendarDayEntities.}" var="productEntity" rowKey="#{productEntity.productId}" rowIndexVar="row"
-                         filteredValue="#{productManagementManagedBean.filteredProductEntities}"
+            <p:dataTable id="dataTableAllScreeningSchedules" widgetVar="dataTableAllScreeningSchedules" value="#{screeningScheduleManagedBean.screeningSchedules}" var="screeningScheduleEntity" rowKey="#{screeningScheduleEntity.screeningScheduleId}" rowIndexVar="row"
+                         filteredValue="#{screeningScheduleManagedBean.filteredScreeningSchedules}"
                          rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
                 
                 <f:facet name="header">
                     <p:outputPanel style="text-align: right;">
                         <h:outputText value="Search all fields:" />
-                        <p:inputText id="globalFilter" onkeyup="PF('dataTableAllProducts').filter()" style="width:300px" placeholder="Enter keyword"/>
+                        <p:inputText id="globalFilter" onkeyup="PF('dataTableAllScreeningSchedules').filter()" style="width:300px" placeholder="Enter keyword"/>
                     </p:outputPanel>
                 </f:facet>
                 
-                <p:column headerText="Product ID" sortBy="#{productEntity.productId}" filterBy="#{productEntity.productId}" filterMatchMode="contains">
-                    <h:outputText value="#{productEntity.productId}" />
+                <p:column headerText="Screening Schedule ID" sortBy="#{screeningScheduleEntity.screeningScheduleId}" filterBy="#{screeningScheduleEntity.screeningScheduleId}" filterMatchMode="contains">
+                    <h:outputText value="#{screeningScheduleEntity.screeningScheduleId}" />
                 </p:column>
                 
-                <p:column headerText="SKU Code" sortBy="#{productEntity.skuCode}" filterBy="#{productEntity.skuCode}" filterMatchMode="contains">
-                    <h:outputText value="#{productEntity.skuCode}" />
+                <p:column headerText="Movie" sortBy="#{screeningScheduleEntity.movie}" filterBy="#{screeningScheduleEntity.movie}" filterMatchMode="contains">
+                    <h:outputText value="#{screeningScheduleEntity.movie}" />
                 </p:column>
                 
-                <p:column headerText="Name" sortBy="#{productEntity.name}" filterBy="#{productEntity.name}" filterMatchMode="contains">
-                    <h:outputText value="#{productEntity.name}" />
+                <p:column headerText="Start Time" sortBy="#{screeningScheduleEntity.startTime}" filterBy="#{screeningScheduleEntity.startTime}" filterMatchMode="contains">
+                    <h:outputText value="#{screeningScheduleEntity.startTime}" />
                 </p:column>
                 
-                <p:column headerText="Quantity on Hand" sortBy="#{productEntity.quantityOnHand}" filterBy="#{productEntity.quantityOnHand}" filterMatchMode="contains">
-                    <h:outputText value="#{productEntity.quantityOnHand}" />
-                </p:column>
-                
-                <p:column headerText="Unit Price" sortBy="#{productEntity.unitPrice}" filterBy="#{productEntity.unitPrice}" filterMatchMode="contains">
-                    <h:outputText value="#{productEntity.unitPrice}">
-                        <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
-                    </h:outputText>
-                </p:column>
-                
-                <p:column headerText="Category" sortBy="#{productEntity.category}" filterBy="#{productEntity.category}" filterMatchMode="contains">
-                    <h:outputText value="#{productEntity.category}" />
+                <p:column headerText="End Time" sortBy="#{screeningScheduleEntity.endTime}" filterBy="#{screeningScheduleEntity.endTime}" filterMatchMode="contains">
+                    <h:outputText value="#{screeningScheduleEntity.endTime}" />
                 </p:column>
                 
                 <p:column headerText="Action" >
-                    <p:commandButton update="formViewProduct" oncomplete="PF('dialogViewProduct').show()" icon="ui-icon-document" title="View">
-                        <f:setPropertyActionListener value="#{productEntity}" target="#{productManagementManagedBean.selectedProductEntityToView}" />
+                    <p:commandButton actionListener="#{screeningScheduleManagedBean.viewDailyScreeningSchedule}" icon="ui-icon-search" title="View">
+                        <f:setPropertyActionListener value="#{screeningScheduleEntity.calendarDayEntity}" target="#{calendarDayManagementManagedBean.selectedCalendarDayEntityToBeViewed}" />
                     </p:commandButton>
-                    <p:commandButton update="formUpdateProduct" oncomplete="PF('dialogUpdateProduct').show()" icon="ui-icon-pencil" title="Update">
-                        <f:setPropertyActionListener value="#{productEntity}" target="#{productManagementManagedBean.selectedProductEntityToUpdate}" />
-                    </p:commandButton>
-                    <p:commandButton icon="ui-icon-trash" actionListener="#{productManagementManagedBean.deleteProduct}" update="formAllProducts:dataTableAllProducts formAllProducts:messages">
-                        <f:attribute name="productEntityToDelete" value="#{productEntity}" />
-                        <p:confirm header="Confirmation" message="Are you sure you want to delete #{productEntity.name} (SKU Code: #{productEntity.skuCode})?" icon="ui-icon-alert" />
+                </p:column>
+                
+            </p:dataTable>
+            <br/>
+            <br/>
+            <p:dataTable id="dataTableAllCalendarDays" widgetVar="dataTableAllCalendarDays" value="#{calendarDayManagementManagedBean.allCalendarDays}" var="calendarDayEntity" rowKey="#{calendarDayEntity.id}" rowIndexVar="row"
+                         filteredValue="#{calendarDayManagementManagedBean.filteredAllCalendarDays}"
+                         rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+                
+                <f:facet name="header">
+                    <p:outputPanel style="text-align: right;">
+                        <h:outputText value="Search all fields:" />
+                        <p:inputText id="globalFilter" onkeyup="PF('dataTableAllCalendarDays').filter()" style="width:300px" placeholder="Enter keyword"/>
+                    </p:outputPanel>
+                </f:facet>
+                
+                <p:column headerText="Calendar Date" sortBy="#{calendarDayEntity.calendarDay}" filterBy="#{calendarDayEntity.calendarDay}" filterMatchMode="contains">
+                    <h:outputText value="#{calendarDayEntity.calendarDay}" />
+                </p:column>
+                
+                <p:column headerText="Action" >
+                    <p:commandButton actionListener="#{screeningScheduleManagedBean.viewDailyScreeningSchedule}" icon="ui-icon-search" title="View">
+                        <f:setPropertyActionListener value="#{calendarDayEntity}" target="#{calendarDayManagementManagedBean.selectedCalendarDayEntityToBeViewed}" />
                     </p:commandButton>
                 </p:column>
                 
@@ -86,3 +95,42 @@
             </p:confirmDialog>
             
         </h:form>
+        
+        <h:form id="formCreateNewCalendarDay">
+            
+            <p:dialog id="dialogCreateNewCalendarDay" widgetVar="dialogCreateNewCalendarDay" header="Create New Calendar Day" closable="true">
+
+                <p:messages id="messagesCreateCalendarDay" redisplay="false" />
+                
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="calendarDay" value="Calendar Date " />
+                        </p:column>
+                        <p:column>
+                            <p:calendar id="calendarDay" value="#{calendarDayManagementManagedBean.newCalendarDayEntityToBeCreated.calendarDay}" required="true" requiredMessage="Calendar Date is required" effect="fold" />
+                            
+                        </p:column>
+                        <p:column>
+                            <p:message for="calendarDay" />
+                        </p:column>
+                    </p:row>
+                    
+                    
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton type="reset" value="Clear" />&nbsp;
+                            <p:commandButton value="Create New Calendar Day" update="@form formAllScreeningSchedules:dataTableAllCalendarDays" actionListener="#{calendarDayManagementManagedBean.createNewCalendarDay}" oncomplete="PF('dialogCreateNewCalendarDay').show();" />
+                        </p:column>
+                    </p:row>
+                    
+                </p:panelGrid>
+
+            </p:dialog>
+            
+        </h:form>
+        
+    </ui:define>
+    
+</ui:composition>

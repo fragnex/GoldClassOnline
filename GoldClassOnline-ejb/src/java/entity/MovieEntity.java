@@ -77,6 +77,20 @@ public class MovieEntity implements Serializable {
         this.screeningSchedules = screeningSchedules;
     }
     
+    public MovieEntity(Integer price, String rating, String genre, Integer runningTime, String title, String casts, String directors, String languages, String synopsis) {
+        this();
+        this.price = price;
+        this.rating = rating;
+        this.genre = genre;
+        this.runningTime = runningTime;
+        this.title = title;
+        this.casts = casts;
+        this.directors = directors;
+        this.languages = languages;
+        this.synopsis = synopsis;
+        
+    }
+    
     public Long getMovieId() {
         return movieId;
     }

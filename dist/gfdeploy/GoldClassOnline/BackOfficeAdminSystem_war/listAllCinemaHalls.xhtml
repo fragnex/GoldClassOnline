@@ -41,6 +41,10 @@
                 <p:column headerText="Action" >
                     <p:commandButton icon="ui-icon-search" actionListener="#{hallManagementManagedBean.viewCinemaHallDetails}" title="View">
                         <f:setPropertyActionListener value="#{cinemaHallEntity}" target="#{hallManagementManagedBean.selectedHallToViewForOperationStaff}" />
+                        <f:setPropertyActionListener value="#{cinemaHallEntity}" target="#{screeningScheduleManagedBean.selectedHallToViewForOperationStaff}" />
+                        <f:setPropertyActionListener value="#{cinemaHallEntity}" target="#{calendarDayManagementManagedBean.selectedHallEntityToBeViewed}" />
+                        
+                        
                     </p:commandButton>
                 </p:column>
                 

@@ -58,6 +58,7 @@ public class HallManagementManagedBean implements Serializable {
     private List<HallEntity> filteredAllHallEntitiesForOperationStaff;
     private HallEntity selectedHallToViewForOperationStaff;
     
+    
     public HallManagementManagedBean() {
         hallEntities = new ArrayList<>();
         filteredHallEntities = new ArrayList<>();

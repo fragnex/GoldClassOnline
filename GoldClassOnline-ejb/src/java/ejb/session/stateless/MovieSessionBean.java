@@ -87,7 +87,7 @@ public class MovieSessionBean implements MovieSessionBeanLocal {
     @Override
     public MovieEntity retrieveMovieByName(String movieName) throws MovieNotFoundException
     {
-        Query query = em.createQuery("SELECT mo FROM CinemaEntity mo WHERE mo.title = :inMovie");
+        Query query = em.createQuery("SELECT mo FROM MovieEntity mo WHERE mo.title = :inMovie");
         query.setParameter("inMovie", movieName);
         
         try

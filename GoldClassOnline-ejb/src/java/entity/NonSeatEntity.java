@@ -30,6 +30,16 @@ public class NonSeatEntity implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     private HallEntity hall;
     
+    public NonSeatEntity() {
+    }
+
+    public NonSeatEntity(String nonSeatEntityType, String rowOfNSE, String colOfNSE, HallEntity hall) {
+        this.nonSeatEntityType = nonSeatEntityType;
+        this.rowOfNSE = rowOfNSE;
+        this.colOfNSE = colOfNSE;
+        this.hall = hall;
+    }
+    
     public Long getNonSeatEntityId() {
         return nonSeatEntityId;
     }

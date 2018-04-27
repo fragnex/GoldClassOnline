@@ -32,6 +32,8 @@ public interface HallSessionBeanLocal {
 
     public void deleteHall(Long hallId) throws HallNotFoundException, DeleteHallException;
 
+    public List<HallEntity> retrieveAllHallEntities();
+
     
 
     

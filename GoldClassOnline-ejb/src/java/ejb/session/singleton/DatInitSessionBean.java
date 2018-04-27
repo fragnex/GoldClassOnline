@@ -62,6 +62,7 @@ public class DatInitSessionBean {
         try
         {
         staffSessionBean.createNewAdministrativeStaffEntity(new StaffEntity("ADMINISTRATIVE", "STAFF", "ADMINISTRATIVESTAFF", "admin", "password"));
+        staffSessionBean.createNewAdministrativeStaffEntity(new StaffEntity("OPERATION", "STAFF", "OPERATIONSTAFF", "admin1", "password"));
         cinemaSessionBean.createNewCinema(new CinemaEntity("Golden Village"));
         cinemaSessionBean.createNewCinema(new CinemaEntity("Eng Wah"));
         messageOfTheDayEntityController.createMessageOfTheDayEntity(new MessageOfTheDayEntity("Lock Cashier!", "Please remember to lock the cashier!", new Date(118, 1, 19)));

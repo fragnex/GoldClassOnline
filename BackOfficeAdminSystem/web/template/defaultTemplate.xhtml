@@ -42,10 +42,14 @@
                             <p:menuitem value="Void/Refund" outcome="voidRefund" icon="ui-icon-arrowreturnthick-1-w " />
                         </p:submenu>
                         -->
-                        <p:submenu label="System Administration">
+                        <p:submenu label="System Administration" rendered="#{sessionScope['isAdminisrativeStaff'] and sessionScope['isLogin']}">
                             <!-- <p:menuitem value="Staff Management" outcome="staffManagement.xhtml" icon="ui-icon-person" /> -->
                             <p:menuitem value="View All Cinema" outcome="cinemaManagement.xhtml" icon="ui-icon-note" />
+                            <p:menuitem value="View All Movies" outcome="viewAllMovies.xhtml" icon="ui-icon-video"/>
                             <!-- <p:menuitem value="Quick Product Enquiry" outcome="quickProductEnquiry.xhtml" icon="ui-icon-search" /> -->
+                        </p:submenu>
+                        <p:submenu label="Operation Staff Administration" rendered="#{sessionScope['isOperationStaff'] and sessionScope['isLogin']}">
+                            <p:menuitem value="List All Cinema Hall" outcome="listAllCinemaHalls.xhtml" icon="ui-icon-search"/>
                         </p:submenu>
                         <!--
                         <p:submenu label="General">

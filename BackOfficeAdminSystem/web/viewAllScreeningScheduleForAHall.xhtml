@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./template/defaultTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        
+        <h3>Back Office Admin System :: View All Screening Schedules For A Hall</h3>
+        <br/>
+        
+        <h:form>
+            
+            <p:menubar>
+                
+                <p:submenu label="Create Calendar Day" icon="ui-icon-calendar">
+                    <p:menuitem value="Create New Calendar Day" onclick="PF('dialogCreateNewCalendarDay').show()" icon="ui-icon-plusthick" />
+                </p:submenu>
+                
+            </p:menubar>
+            <br/>
+            
+        </h:form>
+        
+        <h:form id="formAllScreeningSchedules">
+            
+            <p:messages id="messages" redisplay="false" closable="true" />
+            
+            <p:dataTable id="dataTableAllScreeningSchedules" widgetVar="dataTableAllScreeningSchedules" value="#{hallManagementManagedBean.selectedHallToViewForOperationStaff.calendarDayEntities.}" var="productEntity" rowKey="#{productEntity.productId}" rowIndexVar="row"
+                         filteredValue="#{productManagementManagedBean.filteredProductEntities}"
+                         rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+                
+                <f:facet name="header">
+                    <p:outputPanel style="text-align: right;">
+                        <h:outputText value="Search all fields:" />
+                        <p:inputText id="globalFilter" onkeyup="PF('dataTableAllProducts').filter()" style="width:300px" placeholder="Enter keyword"/>
+                    </p:outputPanel>
+                </f:facet>
+                
+                <p:column headerText="Product ID" sortBy="#{productEntity.productId}" filterBy="#{productEntity.productId}" filterMatchMode="contains">
+                    <h:outputText value="#{productEntity.productId}" />
+                </p:column>
+                
+                <p:column headerText="SKU Code" sortBy="#{productEntity.skuCode}" filterBy="#{productEntity.skuCode}" filterMatchMode="contains">
+                    <h:outputText value="#{productEntity.skuCode}" />
+                </p:column>
+                
+                <p:column headerText="Name" sortBy="#{productEntity.name}" filterBy="#{productEntity.name}" filterMatchMode="contains">
+                    <h:outputText value="#{productEntity.name}" />
+                </p:column>
+                
+                <p:column headerText="Quantity on Hand" sortBy="#{productEntity.quantityOnHand}" filterBy="#{productEntity.quantityOnHand}" filterMatchMode="contains">
+                    <h:outputText value="#{productEntity.quantityOnHand}" />
+                </p:column>
+                
+                <p:column headerText="Unit Price" sortBy="#{productEntity.unitPrice}" filterBy="#{productEntity.unitPrice}" filterMatchMode="contains">
+                    <h:outputText value="#{productEntity.unitPrice}">
+                        <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
+                    </h:outputText>
+                </p:column>
+                
+                <p:column headerText="Category" sortBy="#{productEntity.category}" filterBy="#{productEntity.category}" filterMatchMode="contains">
+                    <h:outputText value="#{productEntity.category}" />
+                </p:column>
+                
+                <p:column headerText="Action" >
+                    <p:commandButton update="formViewProduct" oncomplete="PF('dialogViewProduct').show()" icon="ui-icon-document" title="View">
+                        <f:setPropertyActionListener value="#{productEntity}" target="#{productManagementManagedBean.selectedProductEntityToView}" />
+                    </p:commandButton>
+                    <p:commandButton update="formUpdateProduct" oncomplete="PF('dialogUpdateProduct').show()" icon="ui-icon-pencil" title="Update">
+                        <f:setPropertyActionListener value="#{productEntity}" target="#{productManagementManagedBean.selectedProductEntityToUpdate}" />
+                    </p:commandButton>
+                    <p:commandButton icon="ui-icon-trash" actionListener="#{productManagementManagedBean.deleteProduct}" update="formAllProducts:dataTableAllProducts formAllProducts:messages">
+                        <f:attribute name="productEntityToDelete" value="#{productEntity}" />
+                        <p:confirm header="Confirmation" message="Are you sure you want to delete #{productEntity.name} (SKU Code: #{productEntity.skuCode})?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                </p:column>
+                
+            </p:dataTable>
+            
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+            
+        </h:form>

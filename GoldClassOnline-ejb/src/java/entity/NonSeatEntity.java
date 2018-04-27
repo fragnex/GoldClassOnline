@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,7 +27,7 @@ public class NonSeatEntity implements Serializable {
     private String nonSeatEntityType; //either "WHEELCHAIR / NONAVAILABLE
     private String rowOfNSE;
     private String colOfNSE;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private HallEntity hall;
     
     public Long getNonSeatEntityId() {
@@ -75,6 +76,7 @@ public class NonSeatEntity implements Serializable {
     }
 
     public void setNonSeatEntityType(String nonSeatEntityType) {
+        System.out.println("SET TYPE OF NSE");
         this.nonSeatEntityType = nonSeatEntityType;
     }
 
@@ -84,6 +86,7 @@ public class NonSeatEntity implements Serializable {
 
     public void setRowOfNSE(String rowOfNSE) {
         this.rowOfNSE = rowOfNSE;
+        System.out.println("SET ROW OF NSE");
     }
 
     public String getColOfNSE() {

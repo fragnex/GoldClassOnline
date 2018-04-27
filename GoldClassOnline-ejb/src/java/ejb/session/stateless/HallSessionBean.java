@@ -105,11 +105,23 @@ public class HallSessionBean implements HallSessionBeanLocal {
     @Override
     public void deleteHall(Long hallId) throws HallNotFoundException, DeleteHallException
     {
+        
         HallEntity hallEntityToRemove = retrieveHallByhallId(hallId);
         List<CalendarDayEntity> calendarDays = hallEntityToRemove.getCalendarDayEntities();
        
         if(calendarDays.isEmpty())
         {
+            CinemaEntity c = hallEntityToRemove.getCinema();
+            c.getHalls().remove(hallEntityToRemove); //dissassociation
+            hallEntityToRemove.setCinema(null); //disassocation
+            List<NonSeatEntity> allNonSeats = hallEntityToRemove.getNonSeatEntities();
+            for (NonSeatEntity nse: allNonSeats) {
+                nse.setHall(null);
+            }
+            hallEntityToRemove.setNonSeatEntities(null);
+            for (NonSeatEntity nse: allNonSeats) {
+                em.remove(nse);
+            }
             System.out.println("Checker: Hall Entity:" + hallEntityToRemove.getHallNumber() + " will be deleted");
             em.remove(hallEntityToRemove);
         }
@@ -141,6 +153,12 @@ public class HallSessionBean implements HallSessionBeanLocal {
         Query query = em.createQuery("SELECT he FROM HallEntity he WHERE he.cinema.cinemaId = :ci");
         query.setParameter("ci", cinemaId);
         return query.getResultList();
+    }
+    
+    @Override
+    public List<HallEntity> retrieveAllHallEntities() {
+       Query query = em.createQuery("SELECT he FROM HallEntity he");
+       return query.getResultList();
     }
     /*To be edited!@@@@@@@@@@@
     public HallEntity createNewHallEntity(HallEntity hall, Long cinemaId) {

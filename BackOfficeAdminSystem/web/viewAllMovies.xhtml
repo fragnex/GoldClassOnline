@@ -1,0 +1,475 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./template/defaultTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        
+        <h3>Back Office Admin System :: View All Movies</h3>
+        <br/>
+        
+        <h:form> 
+            <p:menubar>
+                
+                <p:submenu label="Create New Movie" icon="ui-icon-video">
+                    <p:menuitem value="Create New Movie" onclick="PF('dialogCreateNewMovie').show()" icon="ui-icon-plusthick" />
+                </p:submenu>  
+            </p:menubar>
+            <br/>    
+        </h:form>
+        
+        <h:form id="formAllMovies">
+            
+            <p:messages id="messages" redisplay="false" closable="true" />
+            
+            <p:dataTable id="dataTableAllMovies" widgetVar="dataTableAllMovies" value="#{movieManagementManagedBean.movieEntities}" var="movieEntity" rowKey="#{movieEntity.movieId}" rowIndexVar="row"
+                         filteredValue="#{movieManagementManagedBean.filteredMovieEntities}"
+                         rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+                
+                <f:facet name="header">
+                    <p:outputPanel style="text-align: right;">
+                        <h:outputText value="Search all fields:" />
+                        <p:inputText id="globalFilter" onkeyup="PF('dataTableAllMovies').filter()" style="width:300px" placeholder="Enter keyword"/>
+                    </p:outputPanel>
+                </f:facet>
+                
+                <p:column headerText="Movie ID" sortBy="#{movieEntity.movieId}" filterBy="#{movieEntity.movieId}" filterMatchMode="contains">
+                    <h:outputText value="#{movieEntity.movieId}" />
+                </p:column>
+                
+                <p:column headerText="Title" sortBy="#{movieEntity.title}" filterBy="#{movieEntity.title}" filterMatchMode="contains">
+                    <h:outputText value="#{movieEntity.title}"/>
+                </p:column>
+                
+                <p:column headerText="Price" sortBy="#{movieEntity.price}" filterBy="#{movieEntity.price}" filterMatchMode="contains">
+                    <h:outputText value="#{movieEntity.price}">
+                        <f:convertNumber type="currency" currencySymbol="$"/>
+                    </h:outputText>
+                </p:column>
+                
+                <p:column headerText="Rating" sortBy="#{movieEntity.rating}" filterBy="#{movieEntity.rating}" filterMatchMode="contains">
+                    <h:outputText value="#{movieEntity.rating}" />
+                </p:column>
+                
+                <p:column headerText="Genre" sortBy="#{movieEntity.genre}" filterBy="#{movieEntity.genre}" filterMatchMode="contains">
+                    <h:outputText value="#{movieEntity.genre}" />
+                </p:column>
+                
+                <p:column headerText="Running Time" sortBy="#{movieEntity.runningTime}" filterBy="#{movieEntity.runningTime}" filterMatchMode="contains">
+                    <h:outputText value="#{movieEntity.runningTime} minutes"/>
+                </p:column>
+                
+                <p:column headerText="Casts" sortBy="#{movieEntity.casts}" filterBy="#{movieEntity.casts}" filterMatchMode="contains">
+                    <h:outputText value="#{movieEntity.casts}" />
+                </p:column>
+                
+                <p:column headerText="Directors" sortBy="#{movieEntity.directors}" filterBy="#{movieEntity.directors}" filterMatchMode="contains">
+                    <h:outputText value="#{movieEntity.directors}" />
+                </p:column>
+                
+                <p:column headerText="Languages" sortBy="#{movieEntity.languages}" filterBy="#{movieEntity.languages}" filterMatchMode="contains">
+                    <h:outputText value="#{movieEntity.languages}" />
+                </p:column>
+                
+                <p:column headerText="Synopsis" sortBy="#{movieEntity.synopsis}" filterBy="#{movieEntity.synopsis}" filterMatchMode="contains">
+                    <h:outputText value="#{movieEntity.synopsis}" />
+                </p:column>
+                
+                <p:column headerText="Action" >
+                    <p:commandButton update="formViewMovie" oncomplete="PF('dialogViewMovie').show()" icon="ui-icon-search" title="View">
+                        <f:setPropertyActionListener value="#{movieEntity}" target="#{movieManagementManagedBean.selectedMovieEntityToView}" />
+                    </p:commandButton>
+                    <p:commandButton update="formUpdateMovie" oncomplete="PF('dialogUpdateMovie').show()" icon="ui-icon-pencil" title="Update">
+                        <f:setPropertyActionListener value="#{movieEntity}" target="#{movieManagementManagedBean.selectedMovieEntityToUpdate}" />
+                    </p:commandButton>
+                    <p:commandButton icon="ui-icon-trash" actionListener="#{movieManagementManagedBean.deleteMovie}" update="formAllMovies:dataTableAllMovies formAllMovies:messages">
+                        <f:attribute name="movieEntityToDelete" value="#{movieEntity}" />
+                        <p:confirm header="Confirmation" message="Are you sure you want to delete #{movieEntity.title}?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                </p:column>
+                
+            </p:dataTable>
+            
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+            
+        </h:form>
+        
+        <h:form id="formCreateNewMovie">
+            
+            <p:dialog id="dialogCreateNewMovie" widgetVar="dialogCreateNewMovie" header="Create New Movie" closable="true">
+
+                <p:messages id="messagesCreateNewMovie" redisplay="false" />
+                
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="title" value="Movie Title " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="title" value="#{movieManagementManagedBean.newMovieEntity.title}" required="true" requiredMessage="Movie is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="title" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="price" value="Price " />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="price" value="#{movieManagementManagedBean.newMovieEntity.price}" style="width:150px">
+                                <f:selectItem itemLabel="Select Price" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{movieManagementManagedBean.prices}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column>
+                            <p:message for="price" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="rating" value="Rating " />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="rating" value="#{movieManagementManagedBean.newMovieEntity.rating}" style="width:150px">
+                                <f:selectItem itemLabel="Select Rating" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{movieManagementManagedBean.ratings}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column>
+                            <p:message for="rating" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="genre" value="Genre " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="genre" value="#{movieManagementManagedBean.newMovieEntity.genre}" required="true" requiredMessage="Genre is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="genre" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="runningTime" value="Running Time " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="runningTime" value="#{movieManagementManagedBean.newMovieEntity.runningTime}" required="true" requiredMessage="Running Time is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="runningTime" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="casts" value="Casts " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="casts" value="#{movieManagementManagedBean.newMovieEntity.casts}" required="true" requiredMessage="Casts are required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="casts" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="directors" value="Directors " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="directors" value="#{movieManagementManagedBean.newMovieEntity.directors}" required="true" requiredMessage="Directors are required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="directors" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="languages" value="Languages " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="languages" value="#{movieManagementManagedBean.newMovieEntity.languages}" required="true" requiredMessage="Languages are required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="languages" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="synopsis" value="Synopsis " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="synopsis" value="#{movieManagementManagedBean.newMovieEntity.synopsis}" required="true" requiredMessage="Synopsis is required"/>
+                        </p:column>
+                        <p:column>
+                            <p:message for="synopsis" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton type="reset" value="Clear" />&nbsp;
+                            <p:commandButton value="Create New Movie" update="@form formAllMovies:dataTableAllMovies" actionListener="#{movieManagementManagedBean.createNewMovie}" oncomplete="PF('dialogCreateNewMovie').show();" />
+                        </p:column>
+                    </p:row>
+                    
+                </p:panelGrid>
+
+            </p:dialog>
+            
+        </h:form>
+        
+        <h:form id="formViewMovie">
+            
+            <p:dialog id="dialogViewMovie" widgetVar="dialogViewMovie" header="View Movie" closable="true">
+
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Movie ID: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{movieManagementManagedBean.selectedMovieEntityToView.movieId}" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Title: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{movieManagementManagedBean.selectedMovieEntityToView.title}" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Price: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{movieManagementManagedBean.selectedMovieEntityToView.price}" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Rating: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{movieManagementManagedBean.selectedMovieEntityToView.rating}" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Genre: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{movieManagementManagedBean.selectedMovieEntityToView.genre}" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Running Time: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{movieManagementManagedBean.selectedMovieEntityToView.runningTime}" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Casts: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{movieManagementManagedBean.selectedMovieEntityToView.casts}"/> 
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Directors " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{movieManagementManagedBean.selectedMovieEntityToView.directors}" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Languages " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{movieManagementManagedBean.selectedMovieEntityToView.languages}" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Sypnosis " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{movieManagementManagedBean.selectedMovieEntityToView.synopsis}" />
+                        </p:column>
+                    </p:row>
+                    
+                </p:panelGrid>
+
+            </p:dialog>
+            
+        </h:form>
+        
+        <h:form id="formUpdateMovie">
+            
+            <p:dialog id="dialogUpdateMovie" widgetVar="dialogUpdateMovie" header="Update Movie" closable="true">
+
+                <p:messages id="messagesUpdateMovie" redisplay="false" />
+                
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="title" value="Movie Title " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="title" value="#{movieManagementManagedBean.selectedMovieEntityToUpdate.title}" required="true" requiredMessage="Movie is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="title" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="price" value="Price " />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="price" value="#{movieManagementManagedBean.selectedMovieEntityToUpdate.price}" style="width:150px">
+                                <f:selectItem itemLabel="Select Price" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{movieManagementManagedBean.prices}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column>
+                            <p:message for="price" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="rating" value="Rating " />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="rating" value="#{movieManagementManagedBean.selectedMovieEntityToUpdate.rating}" style="width:150px">
+                                <f:selectItem itemLabel="Select Rating" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{movieManagementManagedBean.ratings}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column>
+                            <p:message for="rating" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="genre" value="Genre " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="genre" value="#{movieManagementManagedBean.selectedMovieEntityToUpdate.genre}" required="true" requiredMessage="Genre is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="genre" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="runningTime" value="Running Time " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="runningTime" value="#{movieManagementManagedBean.selectedMovieEntityToUpdate.runningTime}" required="true" requiredMessage="Running Time is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="runningTime" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="casts" value="Casts " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="casts" value="#{movieManagementManagedBean.selectedMovieEntityToUpdate.casts}" required="true" requiredMessage="Casts are required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="casts" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="directors" value="Directors " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="directors" value="#{movieManagementManagedBean.selectedMovieEntityToUpdate.directors}" required="true" requiredMessage="Directors are required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="directors" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="languages" value="Languages " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="languages" value="#{movieManagementManagedBean.selectedMovieEntityToUpdate.languages}" required="true" requiredMessage="Languages are required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="languages" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="synopsis" value="Synopsis " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="synopsis" value="#{movieManagementManagedBean.selectedMovieEntityToUpdate.synopsis}" required="true" requiredMessage="Synopsis is required"/>
+                        </p:column>
+                        <p:column>
+                            <p:message for="synopsis" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton type="reset" value="Clear" />&nbsp;
+                            <p:commandButton value="Update Movie" update="@form formAllMovies:dataTableAllMovies" actionListener="#{movieManagementManagedBean.updateMovie}" oncomplete="PF('dialogUpdateMovie').show();" />
+                        </p:column>
+                    </p:row>
+                    
+                </p:panelGrid>
+
+            </p:dialog>
+            
+        </h:form>
+    </ui:define>    
+</ui:composition>
+

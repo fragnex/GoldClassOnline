@@ -54,13 +54,22 @@
                                 <h:outputText value="#{hall.hallNumber}" />
                             </p:column>
                             <p:column headerText="View Hall">
-                                <p:commandButton id="viewHallButton" onclick="PF('dialogViewHall').show()" icon="ui-icon-search" title="View Hall" label="View Hall">
+                                <p:commandButton update="formViewHall" id="viewHallButton" oncomplete="PF('dialogViewHall').show()" icon="ui-icon-search" title="View Hall" label="View Hall">
                                     <f:setPropertyActionListener value="#{hall}" target="#{hallManagementManagedBean.selectedHallEntityToView}" />
-                                    
                                 </p:commandButton>
-                              
+                                <p:commandButton update="formUpdateHall" oncomplete="PF('dialogUpdateHall').show()" icon="ui-icon-pencil" title="Update Hall">
+                                    <f:setPropertyActionListener value="#{hall}" target="#{hallManagementManagedBean.selectedHallEntityToUpdate}" />
+                                </p:commandButton>
+                                <p:commandButton icon="ui-icon-trash" actionListener="#{hallManagementManagedBean.deleteHall}" update="dataTableAllHalls masterForm:formViewCinema:messages">
+                                    <f:attribute name="hallEntityToDelete" value="#{hall}" />
+                                    <p:confirm header="Confirmation" message="Are you sure you want to delete hall number: #{hall.hallNumber}?" icon="ui-icon-alert" />
+                                 </p:commandButton>
                             </p:column>
-                    </p:dataTable>
+                </p:dataTable>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
             </h:form>
         </h:form>
         
@@ -111,14 +120,21 @@
                 
                 <br/>
                 <br/>
-                <p:panelGrid>
+                <p:panelGrid id="nonSeatPanelGrid">
+                    
                     
                     <p:row>
+                        <h:outputText value="Plase Enter Fields for Hall Number, Rows and Columns before adding non seats" />
+                    </p:row>    
+                    <p:row>
                         <p:column>
-                            <p:outputLabel for="nonSeatType" value="Non Seat Type: " />
+                            <p:outputLabel for="nonSeat" value="Non Seat Type: " />
                         </p:column>
                         <p:column>
-                            <p:inputText id="nonSeatType" value="#{hallManagementManagedBean.newNonSeatEntityToBeAdded.nonSeatEntityType}" required="true" requiredMessage="Non Seat Type is required" />
+                            <p:selectOneMenu id="nonSeat" value="#{hallManagementManagedBean.newNonSeatEntityToBeAdded.nonSeatEntityType}" style="width:150px" required="true" requiredMessage="Non-Seat Type Required">
+                                <f:selectItem itemLabel="Select Non Seat: " itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{hallManagementManagedBean.nonSeatType}" />
+                            </p:selectOneMenu>
                         </p:column>                                  
                     </p:row>
                     
@@ -136,7 +152,7 @@
                             <p:outputLabel for="nonSeatCol" value="Non Seat Column: " />
                         </p:column>
                         <p:column>
-                            <p:inputText id="nonSeatCol" value="#{hallManagementManagedBean.newNonSeatEntityToBeAdded.colOfNSE}" required="true" requiredMessage="Non Seat Row is required" />
+                            <p:inputText id="nonSeatCol" value="#{hallManagementManagedBean.newNonSeatEntityToBeAdded.colOfNSE}" required="true" requiredMessage="Non Seat Coulumn is required" />
                         </p:column>                                  
                     </p:row>
                     
@@ -153,12 +169,13 @@
                 <br/>
                 
                 <h:form id="dataTableNonSeatForm">
+                
                 <p:dataTable id="dataTableNonSeat" value="#{hallManagementManagedBean.newNonSeatEntities}" var="nonSeat" rowKey="#{nonSeat.nonSeatEntityId}" rowIndexVar="row">
                         <p:column headerText="Non Seat Type">
                             <h:outputText value="#{nonSeat.nonSeatEntityType}"/>
                         </p:column>
                         <p:column headerText="Non Seat Row and Col">
-                            <h:outputText value="#{nonSeat.rowOfNSE} + #{nonSeat.colOfNSE}"/>
+                            <h:outputText value="#{nonSeat.rowOfNSE}  #{nonSeat.colOfNSE}"/>
                         </p:column>
                 </p:dataTable>
                 </h:form>
@@ -166,15 +183,15 @@
             
         </h:form>
         
-        <h:form id="viewHall">
+        <h:form id="formViewHall">
             
             <p:dialog id="dialogViewHall" widgetVar="dialogViewHall" header="View Hall" closable="true">
-                <p:messages id="messagesCreateNewHall" redisplay="false" />
+               
                 
                 <p:panelGrid>
                     <p:row>
                         <p:column>
-                            <p:outputLabel for="hallNumber" value="Hall Number: " />
+                            <p:outputLabel for="hallNumber" value="Hall Number is: " />
                         </p:column>
                         <p:column>
                             <h:outputText id="hallNumber" value="#{hallManagementManagedBean.selectedHallEntityToView.hallNumber}" />
@@ -185,6 +202,99 @@
                 
         </h:form>  
         
+        <h:form id="formUpdateHall">
+            
+            <p:dialog id="dialogUpdateHall" widgetVar="dialogUpdateHall" header="Update Hall" closable="true">
+                
+                <p:messages id="messagesUpdateHall" redisplay="false" />
+                <p:panelGrid>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="hallRow" value="New Row " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="hallRow" value="#{hallManagementManagedBean.selectedHallEntityToUpdate.hallRows}" required="true" requiredMessage="Rows is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="hallRow" />
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="hallColumn" value="New Column " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="hallColumn" value="#{hallManagementManagedBean.selectedHallEntityToUpdate.hallColumns}" required="true" requiredMessage="Coulumns is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="hallColumn" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton value="Update Hall" update="@form masterForm" actionListener="#{hallManagementManagedBean.updateHall}" oncomplete="PF('dialogUpdateHall').show();" />
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <h:outputText value="Plase Enter Fields for Hall Number, Rows and Columns before adding non seats" />
+                    </p:row>    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="nonSeat" value="Non Seat Type: " />
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="nonSeat" value="#{hallManagementManagedBean.newNonSeatEntityToBeAdded.nonSeatEntityType}" style="width:150px" required="true" requiredMessage="Non-Seat Type Required">
+                                <f:selectItem itemLabel="Select Non Seat: " itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{hallManagementManagedBean.nonSeatType}" />
+                            </p:selectOneMenu>
+                        </p:column>                                  
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="nonSeatRow" value="Non Seat Row: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="nonSeatRow" value="#{hallManagementManagedBean.newNonSeatEntityToBeAdded.rowOfNSE}" required="true" requiredMessage="Non Seat Row is required" />
+                        </p:column>                                  
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="nonSeatCol" value="Non Seat Column: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="nonSeatCol" value="#{hallManagementManagedBean.newNonSeatEntityToBeAdded.colOfNSE}" required="true" requiredMessage="Non Seat Coulumn is required" />
+                        </p:column>                                  
+                    </p:row>
+                    
+
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton type="reset" value="Clear" />&nbsp;
+                            <p:commandButton value="Create New Non Seat" update="dataTableNonSeatForm:dataTableNonSeat" actionListener="#{hallManagementManagedBean.addNonSeatEntititesToAHallSoonToBeCreated}"/>
+                        </p:column>
+                    </p:row>
+                    
+                </p:panelGrid>
+                <h:form id="dataTableNonSeatForm">
+                
+                <p:dataTable id="dataTableNonSeat" value="#{hallManagementManagedBean.newNonSeatEntities}" var="nonSeat" rowKey="#{nonSeat.nonSeatEntityId}" rowIndexVar="row">
+                        <p:column headerText="Non Seat Type">
+                            <h:outputText value="#{nonSeat.nonSeatEntityType}"/>
+                        </p:column>
+                        <p:column headerText="Non Seat Row and Col">
+                            <h:outputText value="#{nonSeat.rowOfNSE}  #{nonSeat.colOfNSE}"/>
+                        </p:column>
+                </p:dataTable>
+                </h:form>
+            </p:dialog>
+            
+        </h:form>
         
         
     </ui:define>

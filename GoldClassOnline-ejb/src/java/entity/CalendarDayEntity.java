@@ -9,11 +9,13 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -22,14 +24,15 @@ import javax.persistence.OneToMany;
 @Entity
 public class CalendarDayEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date calendarDay;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private HallEntity hall;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<ScreeningScheduleEntity> screeningScheduleEntities;
     public Long getId() {
         return id;
@@ -42,7 +45,7 @@ public class CalendarDayEntity implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (getId() != null ? getId().hashCode() : 0);
         return hash;
     }
 
@@ -53,7 +56,7 @@ public class CalendarDayEntity implements Serializable {
             return false;
         }
         CalendarDayEntity other = (CalendarDayEntity) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.getId() == null && other.getId() != null) || (this.getId() != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -61,7 +64,7 @@ public class CalendarDayEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.CalendarDayEntity[ id=" + id + " ]";
+        return "entity.CalendarDayEntity[ id=" + getId() + " ]";
     }
 
     public HallEntity getHall() {
@@ -78,6 +81,22 @@ public class CalendarDayEntity implements Serializable {
 
     public void setScreeningScheduleEntities(List<ScreeningScheduleEntity> screeningScheduleEntities) {
         this.screeningScheduleEntities = screeningScheduleEntities;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public static void setSerialVersionUID(long aSerialVersionUID) {
+        serialVersionUID = aSerialVersionUID;
+    }
+
+    public Date getCalendarDay() {
+        return calendarDay;
+    }
+
+    public void setCalendarDay(Date calendarDay) {
+        this.calendarDay = calendarDay;
     }
     
 }

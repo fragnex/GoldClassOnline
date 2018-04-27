@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,14 +37,14 @@ public class ScreeningScheduleEntity implements Serializable {
     private Date startTime;
     @Temporal(TemporalType.DATE)
     private Date endTime;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private CalendarDayEntity calendarDayEntity;
     
     
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<TicketEntity> tickets;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false) //must have have a movie!
     private MovieEntity movie;
    

@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./template/defaultTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        
+        <h3>Operation Staff Administration :: List All Cinema Halls</h3>
+        <br/>
+        
+        <h:form id="formAllCinemaHalls">
+            
+            <p:messages id="messages" redisplay="false" closable="true" />
+            
+            <p:dataTable id="dataTableAllCinemaHalls" widgetVar="dataTableAllCinemaHalls" value="#{hallManagementManagedBean.allHallEntitiesForOperationStaff}" var="cinemaHallEntity" rowKey="#{cinemaHallEntity.hallId}" rowIndexVar="row"
+                         filteredValue="#{hallManagementManagedBean.filteredAllHallEntitiesForOperationStaff}"
+                         rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+                
+                <f:facet name="header">
+                    <p:outputPanel style="text-align: right;">
+                        <h:outputText value="Search all fields:" />
+                        <p:inputText id="globalFilter" onkeyup="PF('dataTableAllCinemaHalls').filter()" style="width:300px" placeholder="Enter keyword"/>
+                    </p:outputPanel>
+                </f:facet>
+                
+                <p:column headerText="Cinema Name" sortBy="#{cinemaHallEntity.cinema.cinemaName}" filterBy="#{cinemaHallEntity.cinema.cinemaName}" filterMatchMode="contains">
+                    <h:outputText value="#{cinemaHallEntity.cinema.cinemaName}" />
+                </p:column>
+                
+                <p:column headerText="Hall ID" sortBy="#{cinemaHallEntity.hallId}" filterBy="#{cinemaHallEntity.hallId}" filterMatchMode="contains">
+                    <h:outputText value="#{cinemaHallEntity.hallId}" />
+                </p:column>
+                
+                <p:column headerText="Hall Number" sortBy="#{cinemaHallEntity.hallNumber}" filterBy="#{cinemaHallEntity.hallNumber}" filterMatchMode="contains">
+                    <h:outputText value="#{cinemaHallEntity.hallNumber}" />
+                </p:column>
+                
+                <p:column headerText="Action" >
+                    <p:commandButton icon="ui-icon-search" actionListener="#{hallManagementManagedBean.viewCinemaHallDetails}" title="View">
+                        <f:setPropertyActionListener value="#{cinemaHallEntity}" target="#{hallManagementManagedBean.selectedHallToViewForOperationStaff}" />
+                    </p:commandButton>
+                </p:column>
+                
+            </p:dataTable>
+            
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+            
+        </h:form>
+    </ui:define>
+
+</ui:composition>

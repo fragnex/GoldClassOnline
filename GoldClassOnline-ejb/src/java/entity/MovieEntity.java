@@ -12,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,16 +32,14 @@ public class MovieEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long movieId;
     @Column(nullable = false)
-    private int price; //$10 or $15
-    @Enumerated(EnumType.STRING)
+    private Integer price; //$10 or $15
     @Column(nullable = false)
-    private RatingEnum rating;
-    @Enumerated(EnumType.STRING)
+    private String rating;
     @Column(nullable = false)
-    private GenreEnum genre;
+    private String genre;
     @Column(nullable = false)
-    private int runningTime;
-    @Column(length = 32, nullable = false)
+    private Integer runningTime;
+    @Column(length = 32, nullable = false, unique = true)
     private String title;
     @Column(length = 32, nullable = false)
     private String casts;
@@ -53,15 +52,17 @@ public class MovieEntity implements Serializable {
     //LATER COME BACK!
     private List<String> images;
     
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<ScreeningScheduleEntity> screeningSchedules;
 
     public MovieEntity() {
         images = new ArrayList<>();
         screeningSchedules = new ArrayList<>();
+        price = new Integer(0);
+        runningTime = new Integer(0);
     }
 
-    public MovieEntity(int price, RatingEnum rating, GenreEnum genre, int runningTime, String title, String casts, String directors, String languages, String synopsis, List<String> images, List<ScreeningScheduleEntity> screeningSchedules) {
+    public MovieEntity(Integer price, String rating, String genre, Integer runningTime, String title, String casts, String directors, String languages, String synopsis, List<String> images, List<ScreeningScheduleEntity> screeningSchedules) {
         this();
         this.price = price;
         this.rating = rating;
@@ -117,35 +118,21 @@ public class MovieEntity implements Serializable {
         serialVersionUID = aSerialVersionUID;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
-    public RatingEnum getRating() {
-        return rating;
-    }
+    
 
-    public void setRating(RatingEnum rating) {
-        this.rating = rating;
-    }
-
-    public GenreEnum getGenre() {
-        return genre;
-    }
-
-    public void setGenre(GenreEnum genre) {
-        this.genre = genre;
-    }
-
-    public int getRunningTime() {
+    public Integer getRunningTime() {
         return runningTime;
     }
 
-    public void setRunningTime(int runningTime) {
+    public void setRunningTime(Integer runningTime) {
         this.runningTime = runningTime;
     }
 
@@ -203,6 +190,22 @@ public class MovieEntity implements Serializable {
 
     public void setScreeningSchedules(List<ScreeningScheduleEntity> screeningSchedules) {
         this.screeningSchedules = screeningSchedules;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
     
 }
